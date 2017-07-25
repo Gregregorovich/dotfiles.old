@@ -110,22 +110,28 @@ alias storage='df -h | egrep "Filesystem|minesoc--vg-root|sdb1"'
 # Terminal File Management
 alias cdup='cd ..'
 alias cd~='cd ~'
-alias ccat='pygmentize -g -O style=colorful,linenos=1'
-alias readme='zmore'
-alias l='k -h'
-alias la='k -ah'
-alias lsa='ls -a'
-function findins() {find . -iname "$1"}
-function findsen() {find . -name "$1"}
+function cdf() # print the name of the symlinked file, then
+               # cd to the directory a symlinked-file is contained in
+{ echo      $(readlink $1 | sed -e 's/.*\///') && \
+  cd        $(readlink $1 | \
+  sed -e "s/$(readlink $1 | sed -e 's/.*\///')//") }   # remove the filename from the symlink
+alias ccat='pygmentize -g -O style=colorful,linenos=1' # cat, but with syntax highlighting! requires https://github.com/jingweno/ccat
+alias readme='zmore' # more memorable (IMO)
+alias l='k -h'    # ls -l, but with colors and human-readable file sizes
+alias la='k -ah'  # 'k' requires https://github.com/supercrabtree/k
+alias lsa='ls -a' # faster.
+function findins() {find . -iname "$1"} # case INSensitive find in current directory
+function findsen() {find . -name "$1"}  # case SENsitive find in current directory
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh # This is for fzf, the command-line fuzzy finder
-alias close='kill $(ps -ax | grep konsole | grep grep -v | sed -e ''s/ .*//'')'
+alias close='kill $(ps -ax | grep konsole | grep grep -v | sed -e ''s/ .*//'')' # Closes the terminal, keeps processes (tmux) open.
 
 
 # Network Tools
 alias wol='wakeonlan f0:79:59:da:ad:d2'
-alias mac='arp -a'
-alias tracert='traceroute'
-alias portscan='nmap -sn 192.168.0.0/24 | egrep "Host is up|Nmap scan report for|latency"'
+alias mac='arp -a' # finds mac of an IP on the current network
+alias tracert='traceroute' # requires 'traceroute'
+alias tracrt='tracert'
+alias portscan='nmap -sn 192.168.0.0/24 | egrep "Host is up|Nmap scan report for|latency" --color'
 alias wirelessreset='
   ID=`lsusb | grep Marvell | sed -e ''s/Bus \([0-9]\{3\}\) Device \([0-9]\{3\}\).*/\1\/\2/g''`
      #lsusb | grep Marvell | sed -e ''s/Bus \([0-9]\{3\}\)//g''
