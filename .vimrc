@@ -1,5 +1,7 @@
 " Number Each Line
 set nu
+"set relativenumber
+autocmd VimEnter * execute ":RltvNmbr"
 
 " Enable Syntax Highlighting
 syntax on
@@ -37,15 +39,18 @@ nnoremap h H
 nnoremap - L
 
 " Vim Theme Identification Function
-"colorscheme desert
-function! ShowColourSchemeName()
+colorscheme desert
+"function! ShowColourSchemeName()
+function! Theme()
     try
         echo g:colors_name
+    catch
+        colo
     catch /^Vim:E121/
         echo "default
     endtry
 endfunction
 
 " Dvorak -> Qwerty remapping (Disabled)
-"set langmap='q,\\,w,.e,pr,yt,fy,gu,ci,ro,lp,/[,=],aa,os,ed,uf,ig,dh,hj,tk,nl,s\\;,-',\\;z,qx,jc,kv,xb,bn,mm,w\\,,v.,z/,[-,]=,\"Q,<W,>E,PR,YT,FY,GU,CI,RO,LP,?{,+},AA,OS,ED,UF,IG,DH,HJ,TK,NL,S:,_\",:Z,QX,JC,KV,XB,BN,MM,W<,V>,Z?
-
+"set langmap='q,\\,w,.e,pr,yt,fy,gu,ci,ro,lp,/[,=],aa,os,ed,uf,ig,dh,hj,tk,nl,s\\;,-',\\;z,qx,jc,kv,xb,bn,mm,w\\,,v.,z/,[-,]=,\"Q,<W,>E,PR,$
+T,FY,GU,CI,RO,LP,?{,+},AA,OS,ED,UF,IG,DH,HJ,TK,NL,S:,_\",:Z,QX,JC,KV,XB,BN,MM,W<,V>,Z?
