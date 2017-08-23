@@ -126,6 +126,70 @@ function findsen() {find . -name "$1"}  # case SENsitive find in current directo
 alias close='kill $(ps -ax | grep konsole | grep grep -v | sed -e ''s/ .*//'')' # Closes the terminal, keeps processes (tmux) open.
 
 
+# Function to be lazy and always just use "vim" even when sudo is required.
+function vim()
+# Does this file ( $1 ) exist? If so:
+{ if [ -f $1 ]; then
+  # Is this file a symlink?
+  # This is a symlinked file.
+    #if [ -h test ]; then; echo symlink; else echo regfile; fi
+    if [ -h $1 ]; then
+      # I have permission to write to this file:
+        if   [ "$(ls -l $(readlink $1) | awk '{print $3}')" = "$(whoami)" ]; then
+        # edit "filename"
+          vim      $(readlink $1)
+      # I don't have permssion to write to this file:
+        elif [ "$(ls -l $(readlink $1) | awk '{print $3}')" != "$(whoami)" ]; then
+        # edit "filename" with administrative privileges
+          sudo vim $(readlink $1)
+      # Error catching
+        else
+      # Where is this function erroring?
+          echo "There's something wrong with this function.\nEmenates from symlinked file permission checking"
+      # End if statement
+        fi
+  # This is a regular file
+    else
+    # I have permission to write to this file:
+      if   [ "$(ls -l | grep $1 | awk '{print $3}')" = "$(whoami)" ]; then
+      # edit "filename"
+        vim      $1
+    # I don't have permission to write to this file:
+      elif [ "$(ls -l | grep $1 | awk '{print $3}')" != "$(whoami)" ]; then
+      # edit "filename" with administrative privileges
+        sudo vim $1
+    # Error catching
+      else
+      # Where is this function erroring?
+        echo "There's something wrong with this function.\nEmenates from regular file permission checking"
+    # End if statement
+      fi
+  # End if statement
+    fi
+# This file does not exist. Create it.
+  elif [ ! -f $1 ]; then
+  # If I own this directory:
+    if   [ "$(ls -ld | awk '{print $3}')"=="$(whoami)" ]; then
+  # create and edit "filename"
+      vim      $1
+  # If I don't own this directory:
+    elif [ "$(ls -ld | awk '{print $3}')"!="$(whoami)" ]; then
+    # create and edit "filename" with administrative permissions
+      sudo vim $1
+  # Error catching
+    else
+    # Where is this function erroring?
+      echo "There's something wrong with this function.\nEmenates from current directory permission file making"
+  # End if statement
+    fi
+# Error catching
+  else
+  # Where is this function erroring?
+    echo "There's something wrong with this function.\nEmanates from current directory permission checking"
+# End if statement
+  fi }
+
+
 # Network Tools
 alias wol='wakeonlan f0:79:59:da:ad:d2'
 alias mac='arp -a' # finds mac of an IP on the current network
