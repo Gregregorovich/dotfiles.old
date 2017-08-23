@@ -166,20 +166,29 @@ function vim()
       fi
   # End if statement
     fi
-# This file does not exist. Create it.
+# This file does not exist.
   elif [ ! -f $1 ]; then
-  # If I own this directory:
-    if   [ "$(ls -ld | awk '{print $3}')"=="$(whoami)" ]; then
-  # create and edit "filename"
-      vim      $1
-  # If I don't own this directory:
-    elif [ "$(ls -ld | awk '{print $3}')"!="$(whoami)" ]; then
-    # create and edit "filename" with administrative permissions
-      sudo vim $1
-  # Error catching
+  # This is a directory, symlink or not.
+    if [ -d $1 ]; then
+      echo "This is a directory, not a file. You have changed directory."
+      cd $1
+      ls
+  # Create the file with filename "filename"
     else
-    # Where is this function erroring?
-      echo "There's something wrong with this function.\nEmenates from current directory permission file making"
+    # If I own this directory:
+      if   [ "$(ls -ld | awk '{print $3}')"=="$(whoami)" ]; then
+    # create and edit "filename"
+        vim      $1
+    # If I don't own this directory:
+      elif [ "$(ls -ld | awk '{print $3}')"!="$(whoami)" ]; then
+      # create and edit "filename" with administrative permissions
+        sudo vim $1
+    # Error catching
+      else
+      # Where is this function erroring?
+        echo "There's something wrong with this function.\nEmenates from current directory permission file making"
+    # End if statement
+      fi
   # End if statement
     fi
 # Error catching
