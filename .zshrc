@@ -127,20 +127,15 @@ alias close='kill $(ps -ax | grep konsole | grep grep -v | sed -e ''s/ .*//'')' 
 
 
 # Function to be lazy and always just use "vim" even when sudo is required.
-function vim()
-# Does this file ( $1 ) exist? If so:
-{ if [ -f $1 ]; then
-  # Is this file a symlink?
+# Function to be lazy and always just use "vim" even when sudo is required. Also edits symlinked files. Haven't tested what happens when you try to edit a symlinked folder.                              [215/337]
+function vie()
+# Does this file ( $1 ) exist? If so:                                                                                                                                                                              { if [ -f $1 ]; then
   # This is a symlinked file.
-    #if [ -h test ]; then; echo symlink; else echo regfile; fi
-    if [ -h $1 ]; then
-      # I have permission to write to this file:
+    if [ -h $1 ]; then                                                                                                                                                                                                   # I have permission to write to this file:
         if   [ "$(ls -l $(readlink $1) | awk '{print $3}')" = "$(whoami)" ]; then
-        # edit "filename"
-          vim      $(readlink $1)
+        # edit "filename"                                                                                                                                                                                                    vim      $(readlink $1)
       # I don't have permssion to write to this file:
-        elif [ "$(ls -l $(readlink $1) | awk '{print $3}')" != "$(whoami)" ]; then
-        # edit "filename" with administrative privileges
+        elif [ "$(ls -l $(readlink $1) | awk '{print $3}')" != "$(whoami)" ]; then                                                                                                                                         # edit "filename" with administrative privileges
           sudo vim $(readlink $1)
       # Error catching
         else
@@ -151,11 +146,11 @@ function vim()
   # This is a regular file
     else
     # I have permission to write to this file:
-      if   [ "$(ls -l | grep $1 | awk '{print $3}')" = "$(whoami)" ]; then
+      if   [ "$(ls -l | grep $1 | awk '{print $3}')"]=="$(whoami)" ]; then
       # edit "filename"
         vim      $1
     # I don't have permission to write to this file:
-      elif [ "$(ls -l | grep $1 | awk '{print $3}')" != "$(whoami)" ]; then
+      elif [ "$(ls -l | grep $1 | awk '{print $3}')"!="$(whoami)" ]; then
       # edit "filename" with administrative privileges
         sudo vim $1
     # Error catching
@@ -188,15 +183,22 @@ function vim()
       # Where is this function erroring?
         echo "There's something wrong with this function.\nEmenates from current directory permission file making"
     # End if statement
+      # create and edit "filename" with administrative permissions
+        sudo vim $1
+    # Error catching
+    else
+      # Where is this function erroring?
+        echo "There's something wrong with this function.\nEmenates from current directory permission file making"
+		# End if statement
       fi
   # End if statement
-    fi
+  fi
 # Error catching
   else
   # Where is this function erroring?
     echo "There's something wrong with this function.\nEmanates from current directory permission checking"
 # End if statement
-  fi }
+fi }
 
 
 # Network Tools
