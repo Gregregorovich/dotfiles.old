@@ -146,11 +146,11 @@ function vie()
   # This is a regular file
     else
     # I have permission to write to this file:
-      if   [ "$(ls -l | grep $1 | awk '{print $3}')"]=="$(whoami)" ]; then
+      if   [ "$(ls -l $1 | awk '{print $3}')" = "$(whoami)" ]; then
       # edit "filename"
         vim      $1
     # I don't have permission to write to this file:
-      elif [ "$(ls -l | grep $1 | awk '{print $3}')"!="$(whoami)" ]; then
+      elif [ "$(ls -l $1 | awk '{print $3}')" != "$(whoami)" ]; then
       # edit "filename" with administrative privileges
         sudo vim $1
     # Error catching
