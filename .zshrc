@@ -171,11 +171,11 @@ function vie()
   # Create the file with filename "filename"
     else
     # If I own this directory:
-      if   [ "$(ls -ld | awk '{print $3}')"=="$(whoami)" ]; then
+      if   [ "$(ls -ld | awk '{print $3}')" = "$(whoami)" ]; then
     # create and edit "filename"
         vim      $1
     # If I don't own this directory:
-      elif [ "$(ls -ld | awk '{print $3}')"!="$(whoami)" ]; then
+      elif [ "$(ls -ld | awk '{print $3}')" != "$(whoami)" ]; then
       # create and edit "filename" with administrative permissions
         sudo vim $1
     # Error catching
